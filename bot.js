@@ -9,34 +9,34 @@ const token = 'YOUR_BOT_TOKEN';
 
 // The deployable links categorized
 const links = {
-    codehs: [
-        'https://codehs.com', 
-        'https://codehs.com/lesson/1', 
-        'https://codehs.com/lesson/2'
-    ],
     opensocial: [
-        'https://opensocial.com', 
-        'https://opensocial.com/lesson/1'
+        'https://opensocial.com',
+        'https://opensocial.com/lesson/1',
     ],
-    playcodeio: [
-        'https://playcode.io', 
-        'https://playcode.io/lesson/1'
+    codehs: [
+        'https://codehs.com',
+        'https://codehs.com/lesson/1',
+        'https://codehs.com/lesson/2',
     ],
-    cdnNet: [
-        'https://cdn.net', 
-        'https://cdn.net/lesson/1'
-    ],
-    htmlCafe: [
-        'https://htmlcafe.com', 
-        'https://htmlcafe.com/lesson/1'
-    ],
-    vercel: [
-        'https://vercel.com', 
-        'https://vercel.com/lesson/1'
+    playcode: [
+        'https://playcode.io',
+        'https://playcode.io/lesson/1',
     ],
     github: [
-        'https://github.com', 
-        'https://github.com/repo/1'
+        'https://github.com',
+        'https://github.com/repo/1',
+    ],
+    vercel: [
+        'https://vercel.com',
+        'https://vercel.com/lesson/1',
+    ],
+    htmlCafe: [
+        'https://htmlcafe.com',
+        'https://htmlcafe.com/lesson/1',
+    ],
+    cdnNet: [
+        'https://cdn.net',
+        'https://cdn.net/lesson/1',
     ]
 };
 
@@ -56,19 +56,25 @@ client.once('ready', () => {
     console.log('Bot is online!');
 });
 
-// Handle the deployment command
+// Handle the link command
 client.on('messageCreate', (message) => {
     if (message.author.bot) return;
 
     const command = message.content.trim().toLowerCase().split(' ')[0];
     const userId = message.author.id;
 
-    if (command === '!deploy') {
+    if (command === '!link') {
+        // Show the options for the user to choose from
+        const options = Object.keys(links).join(', ');
+        message.reply(`Please choose a category to deploy a link from: ${options}. Type \`!link <category>\` to select.`);
+    }
+
+    if (command.startsWith('!link ')) {
         const category = message.content.trim().split(' ')[1];
 
         // Check if the category is valid
         if (!category || !links[category]) {
-            message.reply('Please specify a valid category: `codehs`, `opensocial`, `playcode.io`, `cdnNet`, `htmlCafe`, `vercel`, or `github`.');
+            message.reply('Please specify a valid category: `opensocial`, `codehs`, `playcode`, `github`, `vercel`, `htmlCafe`, or `cdnNet`.');
             return;
         }
 
@@ -89,7 +95,7 @@ client.on('messageCreate', (message) => {
         const selectedLink = links[category][Math.floor(Math.random() * links[category].length)];
 
         // Deploy the link
-        message.reply(`Deploying link: ${selectedLink}`);
+        message.reply(`Deploying link from ${category}: ${selectedLink}`);
 
         // Update the user's last deployment date
         if (!userData[userId]) {
